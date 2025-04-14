@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Application</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Application</h1>
+
+        <!-- Form to input city name -->
+        <form id="weatherForm">
+            <input type="text" id="city" placeholder="Enter city" required>
+            <button type="submit">Get Weather</button>
+        </form>
+
+        <!-- Display Weather Information -->
+        <div id="weatherDisplay">
+            <!-- Weather data will be displayed here -->
+        </div>
+
+        <!-- Display Latitude and Longitude -->
+        <div id="coordinates">
+            <p>Latitude: <span id="latitude"></span></p>
+            <p>Longitude: <span id="longitude"></span></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script> <!-- Link to your JavaScript file -->
+</body>
+</html>
