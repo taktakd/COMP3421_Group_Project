@@ -10,6 +10,24 @@
     <div class="container">
         <h1>Weather Application</h1>
 
+        <!-- Hong Kong section -->
+        <div id="hongkong-section">
+            <h2 id="hk-city-name">Hong Kong</h2>
+            <div id="hk-datetime">
+                <span id="hk-current-date"></span>
+                <span id="hk-current-time"></span>
+            </div>
+
+            <div id="hk-weather">
+                <img id="hk-weather-icon" src="" alt="Weather Icon">
+                <div id="hk-weather-data">
+                    <p>Temperature: <span id="hk-temp">-</span>°C</p>
+                    <p>Humidity: <span id="hk-humidity">-</span>%</p>
+                    <p>Conditions: <span id="hk-conditions">-</span></p>
+                </div>
+            </div>
+        </div>
+
         <!-- Form to input city name -->
         <form id="weatherForm">
             <input type="text" id="city" placeholder="Enter city" required>
@@ -19,6 +37,8 @@
         <!-- Display Weather Information -->
         <div id="weatherDisplay">
             <!-- Weather data will be displayed here -->
+            <p id="current-date" style="display: none;"></p>
+            <p id="current-time" style="display: none;"></p>
         </div>
 
         <!-- Display Latitude and Longitude -->
@@ -26,6 +46,13 @@
             <p>Latitude: <span id="latitude"></span></p>
             <p>Longitude: <span id="longitude"></span></p>
         </div>
+
+        <div id="forecast-container">
+            <h3>8-Day Forecast</h3>
+            <div id="forecast-display"></div>
+        </div>
+
+
     </div>
 
     <script src="script.js"></script> <!-- Link to your JavaScript file -->
