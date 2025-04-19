@@ -95,7 +95,7 @@ function displayForecast(forecastData) {
         forecastDisplay.appendChild(dayElement);
     }
 
-
+    // ✅ Show container once forecast is ready
     document.getElementById('forecast-container').style.display = 'block';
 }
 
@@ -116,14 +116,16 @@ weatherForm.addEventListener('submit', function (event) {
         const userLanguage = navigator.language || navigator.userLanguage || 'unknown';
         if (city && typeof city === 'string') {
             gtag('event', 'city_search', {
-             event_category: 'Search',
-             event_label: city, 
-            user_language: userLanguage 
-            });
-            console.log("Sent GA event city_search with:", {
+                event_category: 'Search',
                 event_label: city,
                 user_language: userLanguage
               });
+              console.log("Sent city_search to GA:", {
+                event_category: 'Search',
+                event_label: city,
+                user_language: userLanguage
+              });
+              
             }
     } catch (error) {
         console.error('Error tracking city search:', error);
