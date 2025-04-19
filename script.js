@@ -111,10 +111,24 @@ let searchedCityTimeInterval;
 weatherForm.addEventListener('submit', function (event) {
     event.preventDefault();
     const city = cityInput.value.trim();  // Trim spaces from input
+    // Track city search with Google Analytics
+    try {
+        const userLanguage = navigator.language || navigator.userLanguage || 'unknown';
+        if (city && typeof city === 'string') {
+            gtag('event', 'city_search', {
+                city: city, 
+                user_language: userLanguage 
+            });
+        }
+    } catch (error) {
+        console.error('Error tracking city search:', error);
+    }
 
     weatherDisplay.innerHTML = '<p>Loading...</p>';  // Show loading message
 
     console.log("City:", city);  // Log the city name for debugging
+
+
 
     // Fetch coordinates from the Geocoding API
     fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(city)}&limit=1&appid=62f83c9eacacd4002bb87979caeab3f9`)
@@ -124,6 +138,7 @@ weatherForm.addEventListener('submit', function (event) {
 
             // Check if the response contains valid data
             if (Array.isArray(data) && data.length > 0) {
+                
                 // Data returned is an array, check its length
                 const lat = data[0].lat;
                 const lon = data[0].lon;
