@@ -94,7 +94,11 @@ function displayForecast(forecastData) {
 
         forecastDisplay.appendChild(dayElement);
     }
+
+    // ✅ Show container once forecast is ready
+    document.getElementById('forecast-container').style.display = 'block';
 }
+
 
 // Call this function when the page loads
 document.addEventListener('DOMContentLoaded', function() {
@@ -125,9 +129,6 @@ weatherForm.addEventListener('submit', function (event) {
                 const lon = data[0].lon;
                 console.log(`Latitude: ${lat}, Longitude: ${lon}`);  // Log coordinates to confirm
 
-                // Display latitude and longitude
-                //latitudeDisplay.textContent = lat;  // Update latitude display
-                //longitudeDisplay.textContent = lon;  // Update longitude display
 
                 // Fetch weather data from the One Call API
                 fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=metric&appid=62f83c9eacacd4002bb87979caeab3f9`)
@@ -136,14 +137,12 @@ weatherForm.addEventListener('submit', function (event) {
                         console.log("Weather Data Response:", weatherData);  // Log the weather data response
 
                         const location = data[0];
-                        const displayName = `${location.name}, ${location.state}, ${location.country}`;
+                        const displayName = `${location.name}, ${location.country}`;
 
                         const dateElement = document.createElement('p');
                         const timeElement = document.createElement('p');
 
-                        // Display coordinates
-                        latitudeDisplay.textContent = lat;
-                        longitudeDisplay.textContent = lon;
+                    
 
                         // Clear previous interval if exists
                         if (searchedCityTimeInterval) {
@@ -162,15 +161,52 @@ weatherForm.addEventListener('submit', function (event) {
                         }, 1000);
 
                         if (weatherData.current) {
+                            const sunriseTime = new Date(weatherData.current.sunrise * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                            const sunsetTime = new Date(weatherData.current.sunset * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
                             weatherDisplay.innerHTML = `
-                                <h2>Weather in ${displayName}</h2>
-                                <p>Temperature: ${Math.round(weatherData.current.temp)}°C</p>
-                                <p>Humidity: ${weatherData.current.humidity}%</p>
-                                <p>Wind Speed: ${weatherData.current.wind_speed} m/s</p>
-                                <p>Local Date: ${currentDate.textContent}</p>
-                                <p>Local Time: ${currentTime.textContent}</p>
-                                <p>Conditions: ${weatherData.current.weather[0].main} <img class="weather-icon" src="${getWeatherIcon(weatherData.current.weather[0].icon)}" alt="Weather Icon"></p>
-                            `;
+  <h2>Weather in ${displayName}</h2>
+  <div class="weather-grid">
+    <div class="weather-box">
+      <span class="iconify" data-icon="solar:temperature-bold"></span>
+      <p>Temperature: ${Math.round(weatherData.current.temp)}°C</p>
+    </div>
+    <div class="weather-box">
+      <span class="iconify" data-icon="solar:thermometer-bold-duotone"></span>
+      <p>Feels Like: ${Math.round(weatherData.current.feels_like)}°C</p>
+    </div>
+    <div class="weather-box">
+      <span class="iconify" data-icon="material-symbols:humidity-percentage"></span>
+      <p>Humidity: ${weatherData.current.humidity}%</p>
+    </div>
+    <div class="weather-box">
+      <span class="iconify" data-icon="solar:wind-bold"></span>
+      <p>Wind Speed: ${weatherData.current.wind_speed} m/s</p>
+    </div>
+    <div class="weather-box">
+      <span class="iconify" data-icon="solar:sun-bold-duotone"></span>
+      <p>Sunrise: ${sunriseTime}<br><br>Sunset: ${sunsetTime}</p>
+    </div>
+    <div class="weather-box">
+      <span class="iconify" data-icon="carbon:weather-station"></span>
+      <p>Conditions: ${weatherData.current.weather[0].main}</p>
+      <img 
+    src="${getWeatherIcon(weatherData.current.weather[0].icon)}" 
+    alt="Weather Icon"
+    class="weather-condition-icon"
+    >
+    </div>
+    <div class="weather-box">
+      <span class="iconify" data-icon="solar:calendar-line-duotone"></span>
+      <p>Local Date: ${currentDate.textContent}</p>
+    </div>
+    <div class="weather-box">
+      <span class="iconify" data-icon="solar:clock-circle-bold-duotone"></span>
+      <p>Local Time: ${currentTime.textContent}</p>
+    </div>
+  </div>
+`;
+
+                            
 
                             if (weatherData.daily) {
                                 displayForecast(weatherData);
