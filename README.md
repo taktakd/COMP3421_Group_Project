@@ -14,3 +14,29 @@ This is a responsive weather web application that allows users to search for the
 - 8-day weather forecast
 - Responsive layout for desktop and mobile
 
+🔗 Live Demo: [taktakd.github.io/COMP3421_Group_Project](https://taktakd.github.io/COMP3421_Group_Project/)
+
+## 🚀 How to Run Locally
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/taktakd/COMP3421_Group_Project.git
+   cd COMP3421_Group_Project
+   
+Open index.html directly in your browser:
+Right-click → Open with browser
+(No need for a server or build tools)
+
+##How to Test the App
+
+Type a city name in the search bar.
+
+The app displays:
+Temperature
+Feels Like
+Humidity
+Wind Speed
+Sunrise / Sunset
+Local Date & Time
+Weather Conditions and Icon
+Scroll down to view the 8-day forecast.
