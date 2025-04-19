@@ -116,8 +116,9 @@ weatherForm.addEventListener('submit', function (event) {
         const userLanguage = navigator.language || navigator.userLanguage || 'unknown';
         if (city && typeof city === 'string') {
             gtag('event', 'city_search', {
-                city: city, 
-                user_language: userLanguage 
+             event_category: 'Search',
+             event_label: city, 
+             user_language: userLanguage 
             });
         }
     } catch (error) {
