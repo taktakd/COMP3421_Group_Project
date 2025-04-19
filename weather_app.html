@@ -5,13 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Application</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+    
 </head>
 <body>
-    <div class="container">
-        <h1>Weather Application</h1>
 
+
+    <div class="container">
+     
+        <h1>Weather Application</h1>
         <!-- Hong Kong section -->
         <div id="hongkong-section">
+            
             <h2 id="hk-city-name">Hong Kong</h2>
             <div id="hk-datetime">
                 <span id="hk-current-date"></span>
@@ -29,10 +34,12 @@
         </div>
 
         <!-- Form to input city name -->
-        <form id="weatherForm">
-            <input type="text" id="city" placeholder="Enter city" required>
-            <button type="submit">Get Weather</button>
-        </form>
+        <form id="weatherForm" class="input-group">
+            <input type="text" id="city" placeholder="Search for cities..." required />
+            <button type="submit">
+              <span class="iconify" data-icon="bi:search"></span>
+            </button>
+          </form>
 
         <!-- Display Weather Information -->
         <div id="weatherDisplay">
@@ -41,13 +48,8 @@
             <p id="current-time" style="display: none;"></p>
         </div>
 
-        <!-- Display Latitude and Longitude -->
-        <div id="coordinates">
-            <p>Latitude: <span id="latitude"></span></p>
-            <p>Longitude: <span id="longitude"></span></p>
-        </div>
-
-        <div id="forecast-container">
+      
+        <div id="forecast-container" style="display: none;">
             <h3>8-Day Forecast</h3>
             <div id="forecast-display"></div>
         </div>
@@ -55,6 +57,6 @@
 
     </div>
 
-    <script src="script.js"></script> <!-- Link to your JavaScript file -->
+    <script src="script.js"></script> 
 </body>
 </html>
