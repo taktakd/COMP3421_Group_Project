@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     background-color: #22b1fedd;
     margin: 0;
-    padding: 15px;
+    padding: 10px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -17,7 +17,7 @@ body {
     text-align: center;
     width: 100%;
     max-width:1200 px;
-    margin: 0 0px ;
+    margin: 0 20px ;
 }
 
 h1 {
