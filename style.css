@@ -11,7 +11,7 @@ body {
 
 @media (max-width: 600px) {
     body {
-        padding: 2px;
+        padding: 0px;
     }
 }
 
