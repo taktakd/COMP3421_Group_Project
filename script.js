@@ -113,116 +113,197 @@ weatherForm.addEventListener('submit', function (event) {
     const city = cityInput.value.trim();
   
     try {
-      const userLanguage = navigator.language || navigator.userLanguage || 'unknown';
-      if (city && typeof city === 'string') {
-        gtag('event', 'city_search', {
-          event_category: 'Search',
-          event_label: city,
-          user_language: userLanguage
-        });
-        console.log("Sent city_search to GA:", {
-          event_category: 'Search',
-          event_label: city,
-          user_language: userLanguage
-        });
-      }
+        const userLanguage = navigator.language || navigator.userLanguage || 'unknown';
+        if (city && typeof city === 'string') {
+            gtag('event', 'city_search', {
+                event_category: 'Search',
+                event_label: city,
+                user_language: userLanguage
+            });
+            console.log("Sent city_search to GA:", {
+                event_category: 'Search',
+                event_label: city,
+                user_language: userLanguage
+            });
+        }
     } catch (error) {
-      console.error('Error tracking city search:', error);
+        console.error('Error tracking city search:', error);
     }
   
-    // ✅ This must be inside the event handler too
     weatherDisplay.innerHTML = '<p>Loading...</p>';
     console.log("City:", city);
   
     // Start Geocoding API
     fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(city)}&limit=1&appid=62f83c9eacacd4002bb87979caeab3f9`)
-      .then(response => response.json())
-      .then(data => {
-        console.log("Geocoding API Response:", data);
+        .then(response => response.json())
+        .then(data => {
+            console.log("Geocoding API Response:", data);
   
-        if (Array.isArray(data) && data.length > 0) {
-          const lat = data[0].lat;
-          const lon = data[0].lon;
-          console.log(`Latitude: ${lat}, Longitude: ${lon}`);
+            if (Array.isArray(data) && data.length > 0) {
+                const lat = data[0].lat;
+                const lon = data[0].lon;
+                console.log(`Latitude: ${lat}, Longitude: ${lon}`);
   
-          fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=metric&appid=62f83c9eacacd4002bb87979caeab3f9`)
-            .then(response => response.json())
-            .then(weatherData => {
-              console.log("Weather Data Response:", weatherData);
+                fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=metric&appid=62f83c9eacacd4002bb87979caeab3f9`)
+                    .then(response => response.json())
+                    .then(weatherData => {
+                        console.log("Weather Data Response:", weatherData);
   
-              const location = data[0];
-              const displayName = `${location.name}, ${location.country}`;
-              const timezoneOffset = weatherData.timezone_offset || 0;
+                        const location = data[0];
+                        const displayName = `${location.name}, ${location.country}`;
+                        const timezoneOffset = weatherData.timezone_offset || 0;
   
-              if (searchedCityTimeInterval) clearInterval(searchedCityTimeInterval);
-              updateDateTime(currentDate, currentTime, timezoneOffset);
-              searchedCityTimeInterval = setInterval(() => {
-                updateDateTime(currentDate, currentTime, timezoneOffset);
-              }, 1000);
+                        if (searchedCityTimeInterval) clearInterval(searchedCityTimeInterval);
+                        updateDateTime(currentDate, currentTime, timezoneOffset);
+                        searchedCityTimeInterval = setInterval(() => {
+                            updateDateTime(currentDate, currentTime, timezoneOffset);
+                        }, 1000);
   
-              if (weatherData.current) {
-                const sunriseTime = new Date(weatherData.current.sunrise * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-                const sunsetTime = new Date(weatherData.current.sunset * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                        if (weatherData.current) {
+                            const sunriseTime = new Date(weatherData.current.sunrise * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                            const sunsetTime = new Date(weatherData.current.sunset * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
   
-                weatherDisplay.innerHTML = `
-  <h2>Weather in ${displayName}</h2>
-  <div class="weather-grid">
-    <div class="weather-box">
-      <span class="iconify" data-icon="solar:temperature-bold"></span>
-      <p>Temperature: ${Math.round(weatherData.current.temp)}°C</p>
-    </div>
-    <div class="weather-box">
-      <span class="iconify" data-icon="solar:thermometer-bold-duotone"></span>
-      <p>Feels Like: ${Math.round(weatherData.current.feels_like)}°C</p>
-    </div>
-    <div class="weather-box">
-      <span class="iconify" data-icon="material-symbols:humidity-percentage"></span>
-      <p>Humidity: ${weatherData.current.humidity}%</p>
-    </div>
-    <div class="weather-box">
-      <span class="iconify" data-icon="solar:wind-bold"></span>
-      <p>Wind Speed: ${weatherData.current.wind_speed} m/s</p>
-    </div>
-    <div class="weather-box">
-      <span class="iconify" data-icon="solar:sun-bold-duotone"></span>
-      <p>Sunrise: ${sunriseTime}<br><br>Sunset: ${sunsetTime}</p>
-    </div>
-    <div class="weather-box">
-      <span class="iconify" data-icon="carbon:weather-station"></span>
-      <p>Conditions: ${weatherData.current.weather[0].main}</p>
-      <img src="${getWeatherIcon(weatherData.current.weather[0].icon)}" alt="Weather Icon" class="weather-condition-icon">
-    </div>
-    <div class="weather-box">
-      <span class="iconify" data-icon="solar:calendar-line-duotone"></span>
-      <p>Local Date: ${currentDate.textContent}</p>
-    </div>
-    <div class="weather-box">
-      <span class="iconify" data-icon="solar:clock-circle-bold-duotone"></span>
-      <p>Local Time: ${currentTime.textContent}</p>
-    </div>
-  </div>`;
+                            weatherDisplay.innerHTML = `
+                                <h2>Weather in ${displayName}</h2>
+                                <div class="weather-grid">
+                                    <div class="weather-box">
+                                        <span class="iconify" data-icon="solar:temperature-bold"></span>
+                                        <p>Temperature: ${Math.round(weatherData.current.temp)}°C</p>
+                                    </div>
+                                    <div class="weather-box">
+                                        <span class="iconify" data-icon="solar:thermometer-bold-duotone"></span>
+                                        <p>Feels Like: ${Math.round(weatherData.current.feels_like)}°C</p>
+                                    </div>
+                                    <div class="weather-box">
+                                        <span class="iconify" data-icon="material-symbols:humidity-percentage"></span>
+                                        <p>Humidity: ${weatherData.current.humidity}%</p>
+                                    </div>
+                                    <div class="weather-box">
+                                        <span class="iconify" data-icon="solar:wind-bold"></span>
+                                        <p>Wind Speed: ${weatherData.current.wind_speed} m/s</p>
+                                    </div>
+                                    <div class="weather-box">
+                                        <span class="iconify" data-icon="solar:sun-bold-duotone"></span>
+                                        <p>Sunrise: ${sunriseTime}<br><br>Sunset: ${sunsetTime}</p>
+                                    </div>
+                                    <div class="weather-box">
+                                        <span class="iconify" data-icon="carbon:weather-station"></span>
+                                        <p>Conditions: ${weatherData.current.weather[0].main}</p>
+                                        <img src="${getWeatherIcon(weatherData.current.weather[0].icon)}" alt="Weather Icon" class="weather-condition-icon">
+                                    </div>
+                                    <div class="weather-box">
+                                        <span class="iconify" data-icon="solar:calendar-line-duotone"></span>
+                                        <p>Local Date: ${currentDate.textContent}</p>
+                                    </div>
+                                    <div class="weather-box">
+                                        <span class="iconify" data-icon="solar:clock-circle-bold-duotone"></span>
+                                        <p>Local Time: ${currentTime.textContent}</p>
+                                    </div>
+                                </div>`;
   
-                if (weatherData.daily) {
-                  displayForecast(weatherData);
-                }
-              } else {
-                weatherDisplay.innerHTML = `<p>Weather data not available for this location.</p>`;
-              }
-            })
-            .catch(error => {
-              console.error("Error fetching weather data:", error);
-              weatherDisplay.innerHTML = `<p>Error fetching weather data. Please try again later.</p>`;
-            });
-  
-        } else {
-          console.error("City not found:", data);
-          weatherDisplay.innerHTML = `<p>City not found. Please try again.</p>`;
-        }
-      })
-      .catch(error => {
-        console.error("Error fetching city data:", error);
-        weatherDisplay.innerHTML = `<p>Error fetching city data. Please try again later.</p>`;
-      });
-  });
-  
+                            if (weatherData.daily) {
+                                displayForecast(weatherData);
+                            }
 
+                            // Track successful search
+                            try {
+                                gtag('event', 'search_status', {
+                                    event_category: 'Search',
+                                    event_label: city,
+                                    status: 'success',
+                                    user_language: navigator.language || navigator.userLanguage || 'unknown'
+                                });
+                                console.log("Sent search_status (success) to GA:", {
+                                    event_category: 'Search',
+                                    event_label: city,
+                                    status: 'success'
+                                });
+                            } catch (error) {
+                                console.error('Error tracking search_status (success):', error);
+                            }
+                        } else {
+                            weatherDisplay.innerHTML = `<p>Weather data not available for this location.</p>`;
+                            
+                            // Track failed search (no weather data)
+                            try {
+                                gtag('event', 'search_status', {
+                                    event_category: 'Search',
+                                    event_label: city,
+                                    status: 'failure',
+                                    user_language: navigator.language || navigator.userLanguage || 'unknown'
+                                });
+                                console.log("Sent search_status (failure) to GA:", {
+                                    event_category: 'Search',
+                                    event_label: city,
+                                    status: 'failure'
+                                });
+                            } catch (error) {
+                                console.error('Error tracking search_status (failure):', error);
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching weather data:", error);
+                        weatherDisplay.innerHTML = `<p>Error fetching weather data. Please try again later.</p>`;
+                        
+                        // Track failed search (weather API error)
+                        try {
+                            gtag('event', 'search_status', {
+                                event_category: 'Search',
+                                event_label: city,
+                                status: 'failure',
+                                user_language: navigator.language || navigator.userLanguage || 'unknown'
+                            });
+                            console.log("Sent search_status (failure) to GA:", {
+                                event_category: 'Search',
+                                event_label: city,
+                                status: 'failure'
+                            });
+                        } catch (error) {
+                            console.error('Error tracking search_status (failure):', error);
+                        }
+                    });
+            } else {
+                console.error("City not found:", data);
+                weatherDisplay.innerHTML = `<p>City not found. Please try again.</p>`;
+                
+                // Track failed search (city not found)
+                try {
+                    gtag('event', 'search_status', {
+                        event_category: 'Search',
+                        event_label: city,
+                        status: 'failure',
+                        user_language: navigator.language || navigator.userLanguage || 'unknown'
+                    });
+                    console.log("Sent search_status (failure) to GA:", {
+                        event_category: 'Search',
+                        event_label: city,
+                        status: 'failure'
+                    });
+                } catch (error) {
+                    console.error('Error tracking search_status (failure):', error);
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching city data:", error);
+            weatherDisplay.innerHTML = `<p>Error fetching city data. Please try again later.</p>`;
+            
+            // Track failed search (geocoding API error)
+            try {
+                gtag('event', 'search_status', {
+                    event_category: 'Search',
+                    event_label: city,
+                    status: 'failure',
+                    user_language: navigator.language || navigator.userLanguage || 'unknown'
+                });
+                console.log("Sent search_status (failure) to GA:", {
+                    event_category: 'Search',
+                    event_label: city,
+                    status: 'failure'
+                });
+            } catch (error) {
+                console.error('Error tracking search_status (failure):', error);
+            }
+        });
+});
